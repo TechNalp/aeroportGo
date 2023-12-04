@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accueil</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    *{
+        box-sizing: border-box;
+        margin: 0;
+    }
+    
+    body{
+        background-color: #dddddd;
+    }
+    
+    header{
+        width: 100%;
+    }
+    
+    .header{
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        background-color: rgb(96, 96, 96);
+    }
+    
+    .header .left{
+        margin: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+    
+    .header .left .text{
+        margin-left: 20px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        font-size: 30px;
+    }
+    
+    .header .right{
+        display: flex;
+        margin: 20px;
+        align-items: center;
+    }
+    
+    
+    .header .right ul li{
+        list-style: none;
+        display: inline-block;
+        margin: 0 20px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+        color: #dddddd;
+    }
+    
+    .page{
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    main{
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        
+    }
+    
+    .airportName{
+        width: inherit;
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+    
+    .weatherCards{
+        display: flex;
+        justify-content: space-evenly;
+        width: inherit;
+    }
+    
+    
+    .card{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 400px;
+        border: solid 1px #3c3c3c;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .card .title{
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: normal;
+        font-size: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .card .chart{
+        margin-top: 20px;
+        position: relative;
+    }
+    
+    .lastValues{
+        display: flex;
+        
+    }
+    
+    .lastValues .card{
+        height: 200px;
+        width: 200px;
+        position: relative;
+        
+    }
+    
+    .lastValues .card:not(:nth-child(1)){
+        margin-left: 10px;
+    }
+    
+    .value{
+        font-family: 'Bebas Neue', cursive;
+        font-size: 60px;
+        position: absolute;
+        top: 50%;
+        transform: translate(0,-50%);
+    }
+    
+    .value.pressure{
+        color: #1abc9c;
+    }
+    
+    .value.wind{
+        color: #3498db;
+    }
+    
+    .value.heat{
+        color:  #e74c3c;
+    }
+    
+    .value.pressure::after{
+        position: absolute;
+        font-family: 'Roboto', sans-serif;
+        content: "hPa";
+        font-size: 0.5em;
+        left: 50%;
+        bottom: -25%;
+        transform: translate(-35%,0);
+        
+    }
+    
+    .value.heat::after{
+        position: absolute;
+        font-family: 'Roboto', sans-serif;
+        content: "°C";
+        font-size: 0.5em;
+        left: 50%;
+        bottom: -25%;
+        transform: translate(-35%,0);
+    }
+    
+    .value.wind::after{
+        position: absolute;
+        font-family: 'Roboto', sans-serif;
+        content: "km/h";
+        font-size: 0.5em;
+        left: 50%;
+        bottom: -25%;
+        transform: translate(-35%,0);
+        
+    }
+    
+    
+    .mainGraph{
+        margin-top: 35px;
+        position: relative;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        border: solid 1px #3c3c3c;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    
+    .mainGraph .title{
+        text-align: center;
+        font-family: 'Roboto', sans-serif;
+        font-size: 2rem;
+    }
+    
+    .mainGraph .graph{
+        margin-top: 20px;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%,0);
+        text-align: center;
+    }
+    
+    /*SPINNER*/
+    
+    .spinner{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%) scale(2);
+    }
+    
+    .lds-ellipsis {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+    .lds-ellipsis div {
+        position: absolute;
+        top: 33px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: rgb(8, 8, 8);
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .lds-ellipsis div:nth-child(1) {
+        left: 8px;
+        animation: lds-ellipsis1 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(2) {
+        left: 8px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(3) {
+        left: 32px;
+        animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(4) {
+        left: 56px;
+        animation: lds-ellipsis3 0.6s infinite;
+    }
+    @keyframes lds-ellipsis1 {
+        0% {
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    @keyframes lds-ellipsis3 {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(0);
+        }
+    }
+    @keyframes lds-ellipsis2 {
+        0% {
+            transform: translate(0, 0);
+        }
+        100% {
+            transform: translate(24px, 0);
+        }
+    }
+    
+    
+</style>
+<body>
+    <div class="page">
+        <header>
+            <div class="header">
+                <div class="left">
+                    <div class="logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Logo_IMT_Atlantique.svg/1200px-Logo_IMT_Atlantique.svg.png" alt="IMT LOGO" width="150px">
+                    </div>
+                    <div class="text">
+                        Projet GOLANG
+                    </div>
+                </div>
+                <div class="right">
+                    <ul>
+                        <li>
+                            Cédric Diollot
+                        </li>
+                        <li>
+                            Nathan Delcambre
+                        </li>
+                        <li>
+                            Samuel Bertin
+                        </li>
+                        <li>
+                            Mathis Planchet
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="airportName">
+                Aéroport de Nantes
+            </div>
+            <div class="weatherCards">
+                <div class="card average">
+                    <div class="title">
+                        Moyennes du <strong>{{.date}}</strong>
+                    </div>
+                    <div class="chart">
+                        <canvas id="averagesChart" width="600" height="300"></canvas>
+                        <input type="date" id="datePicker" name="trip-start" max="{{.date}}">
+                    </div>
+                </div>
+                <div style="text-align: center;display: flex;flex-direction: column; justify-content: center;">
+                    <p style="font-family: 'Roboto', sans-serif; font-size: 20px; margin-bottom: 10px;">DERNIÈRE VALEURS</p>
+                    
+                    <div class="lastValues">
+                        
+                        <div class="card lastHeat">
+                            <div class="title">
+                                <strong>TEMPÉRATURE</strong>
+                            </div>
+                            <div class="value heat">
+                                
+                            </div>
+                        </div>
+                        <div class="card lastPressure">
+                            <div class="title">
+                                <strong>PRESSION</strong>
+                            </div>
+                            <div class="value pressure">
+                            </div>
+                        </div>
+                        <div class="card lastWind">
+                            <div class="title">
+                                <strong>VENT</strong>
+                            </div>
+                            <div class="value wind">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mainGraph">
+                <div class="title">
+                    Evolution<p style="font-size: 0.5em;">(3 dernières minutes)</p>
+                </div>
+                <div class="graph">
+                    <canvas id="mainGraphWind" width="1200" height="300"></canvas>
+                    <canvas id="mainGraphHeat" width="1200" height="300"></canvas>
+                    <canvas id="mainGraphPressure" width="1200" height="300"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script lang="text/javascript">
+    
+    const mainGraphWind = document.getElementById('mainGraphWind');
+    const mainGraphHeat = document.getElementById('mainGraphHeat');
+    const mainGraphPressure = document.getElementById('mainGraphPressure');
+    const averagesChart = document.getElementById('averagesChart');
+    const heatValue = document.querySelector(".value.heat")
+    const windValue = document.querySelector(".value.wind")
+    const pressureValue = document.querySelector(".value.pressure")
+    const loader = `<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>`
+    const datePicker = document.getElementById("datePicker")
+    
+    let averagesChartJs = null
+    let mainChartWindJs = null
+    let mainChartHeatJs = null
+    let mainChartPressureJs = null
+    let spinner = document.createElement("div")
+    spinner.classList.add("spinner")
+    spinner.innerHTML = loader
+    let averagesChartData
+    let dateRequest = `{{.date}}`
+    
+    
+    
+    dateRequest = dateRequest.replaceAll("/","-") +":00-00-00"
+    window.onload = (event) =>{
+        generateAverageChart(dateRequest)
+        generateLastsValuesChart()
+        generateMainGraph()
+        startGetLastValue()
+        datePicker.addEventListener("focusout",(event)=>{
+            event.stopPropagation()
+            generateAverageChart(event.target.value.split("-").reverse().join("-")+":00-00-00")
+        })
+        datePicker.value = `{{.date}}`.split("/").reverse().join("-")
+    }
+    
+    
+    function startGetLastValue(){
+        setInterval(generateLastsValuesChart,10500)
+        setInterval(generateMainGraph,10500)
+    }
+    
+    
+    function generateAverageChart(date){
+        let xhttp = new XMLHttpRequest()
+        
+        xhttp.onreadystatechange = (event) =>{
+            let elt = document.querySelector(".card.average .chart")
+            
+            if(xhttp.readyState === 1){
+                elt.appendChild(spinner)
+                if(averagesChartJs != null){
+                    averagesChart.style.opacity = 0
+                }
+            }
+            
+            if(xhttp.readyState === 4 && xhttp.status === 200){
+                averageData = JSON.parse(xhttp.responseText)
+                elt.removeChild(spinner)
+                if (averagesChartJs == null){
+                    averagesChartJs = new Chart(averagesChart, {
+                        type: 'bar',
+                        data: {
+                            labels: ["Température","Pression","Vent"],
+                            datasets: [{
+                                label: 'Moyennes du'+date,
+                                data: [averageData.Heat,averageData.Pressure,averageData.Wind],
+                                backgroundColor: [
+                                '#e74c3c',
+                                '#1abc9c',
+                                '#3498db'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options:{
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y:{
+                                    beginAtZero: true,
+                                    type: 'logarithmic',
+                                }
+                            }
+                        }
+                    });
+                }else{
+                    averagesChart.style.opacity = 1
+                    document.querySelector(".card.average .title").innerHTML = `Moyennes du <strong>`+date.split(":")[0].replaceAll("-","/")+`</strong>`
+                    averagesChartJs.data.datasets[0].data = [averageData.Heat,averageData.Pressure,averageData.Wind]
+                    averagesChartJs.data.datasets[0].label = 'Moyennes du '+date
+                    averagesChartJs.update()
+                }
+                
+            }
+        }
+        
+        xhttp.open('GET',"api/average?airport=NTE&date="+date,true)
+        xhttp.send()
+        
+        
+        
+    }
+    
+    function generateLastsValuesChart(){
+        let xhttp = new XMLHttpRequest()
+        
+        xhttp.onreadystatechange = (event)=>{
+            if(xhttp.readyState === 4 && xhttp.status === 200){
+                json = JSON.parse(xhttp.responseText)
+                heatValue.innerHTML = json.Heat
+                windValue.innerHTML = json.Wind
+                pressureValue.innerHTML = json.Pressure
+            }
+        }
+        xhttp.open('GET',"api/lastValues?airport=NTE",true)
+        xhttp.send()
+        
+        
+        
+        
+    }
+    
+    function prepareData(data){
+        let times = new Array()
+        let result = new Array()
+        for(let time in data){
+            times.push(time)
+        }
+        return times.sort()
+    }
+    
+    function generateMainGraph(){
+        
+        
+        let date = new Date()
+        
+        let dateBefore = new Date(date - (1000 * 60 * 3)).toLocaleString("fr").replaceAll("/","-").replaceAll(":","-").split(" ").join(":")
+        
+        date = date.toLocaleString("fr").replaceAll("/","-").replaceAll(":","-").split(" ").join(":")
+        
+        let data = {
+            "wind":null,
+            "heat":null,
+            "pressure":null,
+        }
+        
+        let xhttpVent = new XMLHttpRequest()
+        let xhttpTemp = new XMLHttpRequest()
+        let xhttpPressure = new XMLHttpRequest()
+        
+        xhttpVent.open('GET','api/valueInterval?airport=NTE&type=Wind&date1='+dateBefore+'&date2='+date)
+        xhttpTemp.open('GET','api/valueInterval?airport=NTE&type=Heat&date1='+dateBefore+'&date2='+date)
+        xhttpPressure.open('GET','api/valueInterval?airport=NTE&type=Pressure&date1='+dateBefore+'&date2='+date)
+        
+        xhttpVent.send()
+        xhttpTemp.send()
+        xhttpPressure.send()
+        
+        windData = new Array()
+        heatData = new Array()
+        pressureData = new Array()
+        
+        xhttpVent.onload = function(){
+            if(xhttpVent.readyState === 4 && xhttpVent.status === 200){
+                data.wind = JSON.parse(xhttpVent.responseText).data
+                
+                windTimes = prepareData(data.wind)
+                
+                for (let index = 0; index < windTimes.length; index++) {
+                    windData.push(data.wind[windTimes[index]])
+                    windTimes[index] = windTimes[index].split(":")[1].replaceAll("-",":")
+                }
+                
+            }
+            if(mainChartWindJs == null){
+                mainChartWindJs = new Chart(mainGraphWind, {
+                    type: 'line',
+                    data: {
+                        labels: windTimes,
+                        datasets: [{
+                            label: 'Vent',
+                            data: windData,
+                            borderWidth: 2,
+                            borderColor: '#3498db',
+                            tension: 0.1
+                        }]
+                    }
+                });
+            }else{
+                mainChartWindJs.data.labels = windTimes
+                mainChartWindJs.data.datasets[0].data = windData
+                mainChartWindJs.update()
+            }
+            
+        }
+        
+        xhttpTemp.onload = function(){
+            if(xhttpTemp.readyState === 4 && xhttpTemp.status === 200){
+                data.heat = JSON.parse(xhttpTemp.responseText).data
+                heatTimes = prepareData(data.heat)
+                
+                for (let index = 0; index < heatTimes.length; index++) {
+                    heatData.push(data.heat[heatTimes[index]])
+                    heatTimes[index] = heatTimes[index].split(":")[1].replaceAll("-",":")
+                }
+                if(mainChartHeatJs == null){
+                    mainChartHeatJs = new Chart(mainGraphHeat, {
+                        type: 'line',
+                        data: {
+                            labels: heatTimes,
+                            datasets: [ {
+                                label: 'Température',
+                                data: heatData,
+                                borderWidth: 2,
+                                borderColor: '#e74c3c',
+                                tension: 0.1
+                            }]
+                        }
+                    });
+                    
+                }else{
+                    mainChartHeatJs.data.labels = heatTimes
+                    mainChartHeatJs.data.datasets[0].data = heatData
+                    mainChartHeatJs.update()
+                }
+            }
+        }
+        
+        xhttpPressure.onload = function(){
+            if(xhttpPressure.readyState === 4 && xhttpPressure.status === 200){
+                data.pressure = JSON.parse(xhttpPressure.responseText).data
+                
+                pressureTimes =  prepareData(data.pressure)
+                
+                for (let index = 0; index < pressureTimes.length; index++) {
+                    pressureData.push(data.pressure[pressureTimes[index]])
+                    pressureTimes[index] = pressureTimes[index].split(":")[1].replaceAll("-",":")
+                }
+                
+                
+                if(mainChartPressureJs == null){
+                    mainChartPressureJs = new Chart(mainGraphPressure, {
+                        type: 'line',
+                        data: {
+                            labels: pressureTimes,
+                            datasets: [{
+                                label: 'Pression',
+                                data: pressureData,
+                                borderWidth: 2,
+                                borderColor: '#1abc9c',
+                                tension: 0.1
+                            }]
+                        }
+                    });
+                    
+                }else{
+                    mainChartPressureJs.data.labels = pressureTimes
+                    mainChartPressureJs.data.datasets[0].data = pressureData
+                    mainChartPressureJs.update()
+                }
+                
+                
+            }
+        }
+        
+        
+    }
+        
+        
+        
+        
+        
+        
+    </script>
+    </html>
+    

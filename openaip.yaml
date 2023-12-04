@@ -1,0 +1,99 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "Sensor Data API"
+host: "localhost:8000"
+basePath: "/"
+paths:
+  /getDatasBetweenTimeValues:
+    get:
+      summary: "Retrieve sensor data for a given time range and airport"
+      description: "Returns a JSON object containing the raw sensor data for the specified time range and airport"
+      parameters:
+        - name: "airport"
+          in: "query"
+          description: "IATA code of the airport"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "query"
+          description: "ID of the sensor"
+          required: true
+          type: "string"
+        - name: "type"
+          in: "query"
+          description: "Type of the sensor (e.g. Heat, Pressure, Wind)"
+          required: true
+          type: "string"
+        - name: "date1"
+          in: "query"
+          description: "Start time of the time range, in the format 'DD-MM-YYYY:HH-MM-SS'"
+          required: true
+          type: "string"
+        - name: "date2"
+          in: "query"
+          description: "End time of the time range, in the format 'DD-MM-YYYY:HH-MM-SS'"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                items:
+                  type: "integer"
+        400:
+          description: "Invalid request parameters"
+        404:
+          description: "Not values found"
+  /getAverageBetweenTimeValues:
+    get:
+      summary: "Retrieve average sensor data for a given time range and airport"
+      description: "Returns a JSON object containing the average sensor data for the specified time range and airport"
+      parameters:
+        - name: "airport"
+          in: "query"
+          description: "IATA code of the airport"
+          required: true
+          type: "string"
+        - name: "id"
+          in: "query"
+          description: "ID of the sensor"
+          required: true
+          type: "string"
+        - name: "type"
+          in: "query"
+          description: "Type of the sensor (e.g. Heat, Pressure, Wind)"
+          required: true
+          type: "string"
+        - name: "date1"
+          in: "query"
+          description: "Start time of the time range, in the format 'DD-MM-YYYY:HH-MM-SS'"
+          required: true
+          type: "string"
+        - name: "date2"
+          in: "query"
+          description: "End time of the time range, in the format 'DD-MM-YYYY:HH-MM-SS'"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "object"
+            properties:
+              # Add properties for each sensor type, with type "integer"
+              # For example:
+              Heat:
+                type: "integer"
+              Pressure:
+                type: "integer"
+              Wind:
+                type: "integer"
+        400:
+          description: "Invalid request parameters"
+        404:
+          description: "Not values found"
